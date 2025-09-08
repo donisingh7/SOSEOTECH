@@ -1,90 +1,53 @@
 import nodemailer from "nodemailer";
 import formidable from "formidable";
-import fs from "fs";
+import { readFile } from "fs/promises";
 
 export const config = { api: { bodyParser: false } };
 
-const formOpts = {
-  multiples: false,
-  keepExtensions: true,
-  uploadDir: "/tmp",
-  maxFileSize: 10 * 1024 * 1024, // 10MB
-};
-const nl2br = (s = "") => String(s).replace(/\n/g, "<br/>");
+function parseForm(req) {
+  const form = formidable({ multiples: false, keepExtensions: true });
+  return new Promise((resolve, reject) => {
+    form.parse(req, (err, fields, files) => (err ? reject(err) : resolve({ fields, files })));
+  });
+}
 
 export default async function handler(req, res) {
-  // CORS
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (req.method !== "POST") return res.status(405).json({ error: "Method Not Allowed" });
 
-  // Read + trim envs
-  const RAW_USER = process.env.EMAIL_USER ?? process.env.SMTP_USER ?? "";
-  const RAW_PASS = process.env.EMAIL_PASS ?? process.env.SMTP_PASS ?? "";
-  const EMAIL_USER = RAW_USER.trim();
-  const EMAIL_PASS = RAW_PASS.trim();
-  const CAREERS_TO = (process.env.CAREERS_TO || EMAIL_USER).trim();
-
-  if (!EMAIL_USER || !EMAIL_PASS) {
-    console.error("ENV_MISSING", {
-      vercelEnv: process.env.VERCEL_ENV,
-      hasUser: !!EMAIL_USER,
-      hasPass: !!EMAIL_PASS,
-    });
-    return res.status(500).json({ error: "Server email credentials missing" });
-  }
-
-  let tempFilePath = null;
   try {
-    const { fields, files } = await new Promise((resolve, reject) => {
-      const form = formidable(formOpts);
-      form.parse(req, (err, f, fl) => (err ? reject(err) : resolve({ fields: f, files: fl })));
-    });
+    const { fields, files } = await parseForm(req);
+    const file = Array.isArray(files.resume) ? files.resume[0] : files.resume;
+    if (!file) return res.status(400).json({ error: "Resume file required" });
 
-    const fullName = fields.fullName?.toString() || "";
-    const email = fields.email?.toString() || "";
-    const phone = fields.phone?.toString() || "";
-    const cover = fields.cover?.toString() || "";
-    if (!fullName || !email) return res.status(400).json({ error: "Missing required fields" });
-
-    const attachments = [];
-    const resume = files.resume;
-    if (resume?.filepath) {
-      tempFilePath = resume.filepath;
-      const content = fs.readFileSync(resume.filepath);
-      attachments.push({ filename: resume.originalFilename || "resume", content });
-    }
+    const fileBuffer = await readFile(file.filepath);
+    const filename = file.originalFilename || "resume.pdf";
+    const contentType = file.mimetype || "application/pdf";
 
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: { user: EMAIL_USER, pass: EMAIL_PASS },
+      host: (process.env.SMTP_HOST || "smtp.gmail.com").trim(),
+      port: Number((process.env.SMTP_PORT || "465").trim()),
+      secure: String(process.env.SMTP_SECURE ?? "true") === "true",
+      auth: {
+        user: (process.env.EMAIL_USER || "").trim(),
+        pass: (process.env.EMAIL_PASS || "").trim(),
+      },
     });
 
     await transporter.sendMail({
-      from: `"SOSEOTECH Careers" <${EMAIL_USER}>`,
-      replyTo: email,
-      to: CAREERS_TO,
-      subject: `Careers Application — ${fullName}`,
-      html: `
-        <h2>New Careers Application</h2>
-        <p><strong>Name:</strong> ${fullName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || "—"}</p>
-        <p><strong>Cover Letter:</strong></p>
-        <p>${nl2br(cover || "—")}</p>
-      `,
-      attachments,
+      from: (process.env.FROM_EMAIL || process.env.EMAIL_USER).trim(),
+      to: (process.env.TO_EMAIL || process.env.EMAIL_USER).trim(),
+      replyTo: (fields.email?.toString() || "").trim(),
+      subject: `New Resume Submission — ${fields.name || "Applicant"}`,
+      text:
+        `Name: ${fields.name}\nEmail: ${fields.email}\nPhone: ${fields.phone}\nRole: ${fields.role}\n\n` +
+        `${fields.message || ""}`,
+      attachments: [{ filename, content: fileBuffer, contentType }],
     });
 
-    if (tempFilePath) fs.unlink(tempFilePath, () => {});
-    return res.status(200).json({ ok: true });
+    return res.status(200).json({ ok: true, message: "Resume submitted!" });
   } catch (err) {
-    console.error("CAREERS API ERROR:", err);
-    if (tempFilePath) fs.unlink(tempFilePath, () => {});
-    return res.status(500).json({ error: "Failed to send application" });
+    console.error("RESUME error:", err);
+    return res.status(500).json({ error: "Resume submit failed" });
   }
 }
