@@ -138,22 +138,22 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 z-50 w-full bg-white/95 backdrop-blur shadow-sm">
+    <nav className="fixed top-0 left-0 z-50 w-full bg-neutral-800 shadow-none text-neutral-100">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img src="/soseo_logo.png" alt="SOSEOTECH" className="h-20 w-auto object-contain" />
         </Link>
 
-        {/* Center nav */}
-        <ul className="hidden md:flex items-center gap-6">
+        {/* Center nav (all devices) */}
+        <ul className="flex items-center gap-6">
           {menu.map((item) => {
             if (item.type === "route") {
               return (
                 <li key={item.label}>
                   <Link
                     to={item.to}
-                    className="capitalize text-sm font-medium text-slate-900 transition"
+                    className="capitalize text-sm font-medium text-neutral-100 transition hover:text-white"
                   >
                     {item.label}
                   </Link>
@@ -170,7 +170,7 @@ const Navbar = () => {
                       setSolOpen((v) => !v);
                       setTechOpen(false);
                     }}
-                    className="capitalize flex items-center gap-1 text-sm font-medium text-slate-900 transition"
+                    className="capitalize flex items-center gap-1 text-sm font-medium text-neutral-100 transition hover:text-white"
                   >
                     {item.label}
                     <ChevronDown
@@ -229,7 +229,7 @@ const Navbar = () => {
                       setTechOpen((v) => !v);
                       setSolOpen(false);
                     }}
-                    className="capitalize flex items-center gap-1 text-sm font-medium text-slate-900 transition"
+                    className="capitalize flex items-center gap-1 text-sm font-medium text-neutral-100 transition hover:text-white"
                   >
                     {item.label}
                     <ChevronDown
@@ -318,11 +318,11 @@ const Navbar = () => {
           })}
         </ul>
 
-        {/* Right CTA */}
-        <div className="hidden md:block">
+        {/* Right CTA (all devices) */}
+        <div className="block">
           <Link
             to="/contact"
-            className="inline-flex items-center border border-slate-900 px-4 py-1.5 text-xs font-semibold text-slate-900 hover:bg-slate-900 hover:text-white transition"
+            className="inline-flex items-center border border-neutral-300/30 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-semibold text-neutral-100 hover:bg-white hover:text-neutral-900 transition"
           >
             Get Started
           </Link>
