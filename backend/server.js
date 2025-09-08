@@ -1,4 +1,3 @@
-// server.js  (ESM)
 import express from "express";
 import nodemailer from "nodemailer";
 import multer from "multer";
@@ -20,7 +19,6 @@ const upload = multer({ dest: "uploads/" });
 // health
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
-// gmail transporter
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
