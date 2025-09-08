@@ -1,4 +1,4 @@
-// server.js
+// server.js  (ESM)
 import express from "express";
 import nodemailer from "nodemailer";
 import multer from "multer";
@@ -11,39 +11,37 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-// --- Middleware
-app.use(cors()); // allow all origins in dev; tighten for prod if needed
-app.use(express.json({ limit: "1mb" }));
+app.use(cors());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// --- Multer: temp upload dir for resumes
 const upload = multer({ dest: "uploads/" });
 
-// --- Nodemailer transporter (Gmail + App Password)
+// health
+app.get("/health", (_req, res) => res.json({ ok: true }));
+
+// gmail transporter
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
-    user: process.env.EMAIL_USER, // e.g. soseotech@gmail.com
-    pass: process.env.EMAIL_PASS, // Gmail App Password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
-// --- Health check
-app.get("/health", (_req, res) => res.json({ ok: true }));
-
-// ===== CONTACT =====
+// contact
 app.post("/contact", async (req, res) => {
   try {
     const { name, email, phone, message } = req.body || {};
     if (!name || !email || !message) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-
-    const to = process.env.CONTACT_TO || process.env.EMAIL_USER;
-
     await transporter.sendMail({
-      from: `"${name}" <${email}>`,
-      to,
+      from: `"SOSEOTECH Forms" <${process.env.EMAIL_USER}>`,
+      to: process.env.CONTACT_TO || process.env.EMAIL_USER,
+      replyTo: email,
       subject: `Contact Form — ${name}`,
       html: `
         <h2>New Contact Form Submission</h2>
@@ -51,23 +49,21 @@ app.post("/contact", async (req, res) => {
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Phone:</strong> ${phone || "—"}</p>
         <p><strong>Message:</strong></p>
-        <p>${(message || "").replace(/\n/g, "<br/>")}</p>
+        <p>${String(message || "").replace(/\n/g, "<br/>")}</p>
       `,
     });
-
     res.json({ ok: true, message: "Contact email sent successfully" });
   } catch (err) {
-    console.error("CONTACT ERROR:", err);
+    console.error("CONTACT ERROR:", err.message);
     res.status(500).json({ error: "Failed to send contact email" });
   }
 });
 
-// ===== CAREERS =====
+// careers
 app.post("/careers", upload.single("resume"), async (req, res) => {
   try {
     const { fullName, email, phone, cover } = req.body || {};
     if (!fullName || !email) {
-      // clean up file if present
       if (req.file) fs.unlink(req.file.path, () => {});
       return res.status(400).json({ error: "Missing required fields" });
     }
@@ -80,11 +76,10 @@ app.post("/careers", upload.single("resume"), async (req, res) => {
       });
     }
 
-    const to = process.env.CAREERS_TO || process.env.EMAIL_USER;
-
     await transporter.sendMail({
-      from: `"${fullName}" <${email}>`,
-      to,
+      from: `"SOSEOTECH Careers" <${process.env.EMAIL_USER}>`,
+      to: process.env.CAREERS_TO || process.env.EMAIL_USER,
+      replyTo: email,
       subject: `Careers Application — ${fullName}`,
       html: `
         <h2>New Careers Application</h2>
@@ -92,23 +87,20 @@ app.post("/careers", upload.single("resume"), async (req, res) => {
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Phone:</strong> ${phone || "—"}</p>
         <p><strong>Cover Letter:</strong></p>
-        <p>${(cover || "—").replace(/\n/g, "<br/>")}</p>
+        <p>${String(cover || "—").replace(/\n/g, "<br/>")}</p>
       `,
       attachments,
     });
 
-    // cleanup temp file
     if (req.file) fs.unlink(req.file.path, () => {});
     res.json({ ok: true, message: "Application email sent successfully" });
   } catch (err) {
-    console.error("CAREERS ERROR:", err);
-    // cleanup temp file on error
+    console.error("CAREERS ERROR:", err.message);
     if (req.file) fs.unlink(req.file.path, () => {});
     res.status(500).json({ error: "Failed to send application email" });
   }
 });
 
-// --- Start server
 app.listen(port, () => {
   console.log(`🚀 Backend API running at http://localhost:${port}`);
 });
