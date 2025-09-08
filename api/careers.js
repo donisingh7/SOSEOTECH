@@ -1,38 +1,30 @@
+// /api/careers.js
 import nodemailer from "nodemailer";
 import formidable from "formidable";
 import fs from "fs";
 
-export const config = {
-  api: { bodyParser: false }, // let formidable handle multipart/form-data
-};
+export const config = { api: { bodyParser: false } };
 
 export default async function handler(req, res) {
-  // CORS
   if (req.method === "OPTIONS") {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     return res.status(200).end();
   }
-
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   try {
     const form = formidable({ multiples: false, keepExtensions: true });
-    const { fields, files } = await new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => (err ? reject(err) : resolve({ fields, files })));
-    });
+    const { fields, files } = await new Promise((resolve, reject) =>
+      form.parse(req, (err, f, fl) => (err ? reject(err) : resolve({ fields: f, files: fl })))
+    );
 
     const fullName = fields.fullName?.toString() || "";
     const email = fields.email?.toString() || "";
     const phone = fields.phone?.toString() || "";
     const cover = fields.cover?.toString() || "";
-
-    if (!fullName || !email) {
-      return res.status(400).json({ error: "Missing required fields" });
-    }
+    if (!fullName || !email) return res.status(400).json({ error: "Missing required fields" });
 
     const attachments = [];
     const resume = files.resume;
@@ -43,19 +35,20 @@ export default async function handler(req, res) {
       });
     }
 
+    const { EMAIL_USER, EMAIL_PASS, CAREERS_TO } = process.env;
+    if (!EMAIL_USER || !EMAIL_PASS) return res.status(500).json({ error: "Server email credentials missing" });
+
     const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: { user: EMAIL_USER, pass: EMAIL_PASS },
     });
 
-    const to = process.env.CAREERS_TO || "careers@soseotech.com";
-
     await transporter.sendMail({
-      from: `"${fullName}" <${email}>`,
-      to,
+      from: `"SOSEOTECH Careers" <${EMAIL_USER}>`,
+      replyTo: email,
+      to: CAREERS_TO || EMAIL_USER,
       subject: `Careers Application — ${fullName}`,
       html: `
         <h2>New Careers Application</h2>
@@ -63,7 +56,7 @@ export default async function handler(req, res) {
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Phone:</strong> ${phone || "—"}</p>
         <p><strong>Cover Letter:</strong></p>
-        <p>${cover ? cover.replace(/\n/g, "<br/>") : "—"}</p>
+        <p>${String(cover || "—").replace(/\n/g, "<br/>")}</p>
       `,
       attachments,
     });
