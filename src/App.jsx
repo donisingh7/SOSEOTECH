@@ -12,6 +12,8 @@ import WhyChooseUs from "./components/WhyChooseUs";
 import CareersPage from "./pages/CareersPage";
 import ContactPage from "./pages/ContactPage"; // add
 import Testimonials from "./components/Testimonials";
+import Technologies from "./pages/Technologies.jsx";
+
 
 
 // inside <Route element={<ShellLayout />}> …
@@ -122,6 +124,8 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/careers" element={<CareersPage />} />
           <Route path="/contact" element={<ContactPage />} />
+            <Route path="/technologies" element={<Technologies />} />
+
 
 
         </Route>

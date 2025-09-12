@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   ChevronDown,
   Code2,
@@ -26,7 +26,8 @@ import {
   Workflow,
 } from "lucide-react";
 
-const useOutsideClose = (refs, onClose) => {
+/* Close dropdowns on outside click or Escape */
+function useOutsideClose(refs, onClose) {
   useEffect(() => {
     const onClick = (e) => {
       const inside = refs.some((r) => r.current && r.current.contains(e.target));
@@ -40,12 +41,9 @@ const useOutsideClose = (refs, onClose) => {
       document.removeEventListener("keydown", onKey);
     };
   }, [refs, onClose]);
-};
+}
 
-const Navbar = () => {
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
-
+export default function Navbar() {
   const [techOpen, setTechOpen] = useState(false);
   const [solOpen, setSolOpen] = useState(false);
 
@@ -65,7 +63,7 @@ const Navbar = () => {
     { label: "Solutions & Services", type: "mega" },
     { label: "Technologies", type: "dropdown" },
     { label: "Careers", type: "route", to: "/careers" },
-    { label: "Contact us", type: "route", to: "/contact" },
+    { label: "Contact Us", type: "route", to: "/contact" },
   ];
 
   const servicesCards = [
@@ -138,14 +136,14 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 z-50 w-full bg-neutral-800 shadow-none text-neutral-100">
+    <nav className="fixed top-0 left-0 z-[100] w-full bg-[#241c15] text-[#f6f3ee] border-b border-[#3a2f26]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center">
           <img src="/soseo_logo.png" alt="SOSEOTECH" className="h-20 w-auto object-contain" />
         </Link>
 
-        {/* Center nav (all devices) */}
+        {/* Center nav */}
         <ul className="flex items-center gap-6">
           {menu.map((item) => {
             if (item.type === "route") {
@@ -153,7 +151,7 @@ const Navbar = () => {
                 <li key={item.label}>
                   <Link
                     to={item.to}
-                    className="capitalize text-sm font-medium text-neutral-100 transition hover:text-white"
+                    className="capitalize text-sm font-medium text-[#f6f3ee]/95 hover:text-white transition"
                   >
                     {item.label}
                   </Link>
@@ -170,13 +168,10 @@ const Navbar = () => {
                       setSolOpen((v) => !v);
                       setTechOpen(false);
                     }}
-                    className="capitalize flex items-center gap-1 text-sm font-medium text-neutral-100 transition hover:text-white"
+                    className="capitalize flex items-center gap-1 text-sm font-medium text-[#f6f3ee]/95 hover:text-white transition"
                   >
                     {item.label}
-                    <ChevronDown
-                      size={14}
-                      className={`transition-transform ${solOpen ? "rotate-180" : ""}`}
-                    />
+                    <ChevronDown size={14} className={`transition-transform ${solOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   {solOpen && (
@@ -185,7 +180,7 @@ const Navbar = () => {
                       className="absolute left-1/2 -translate-x-1/2 mt-3
                                  w-[1000px] max-w-[calc(100vw-2rem)]
                                  rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black/5
-                                 p-8 z-50"
+                                 p-8 z-[110] overflow-visible"
                     >
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {servicesCards.map((s) => (
@@ -199,13 +194,10 @@ const Navbar = () => {
                               {s.icon}
                             </div>
                             <h4 className="text-sm font-semibold text-slate-900">{s.title}</h4>
-                            <p className="text-xs text-slate-600 mt-1 text-left">{s.desc}</p>
+                            <p className="text-xs text-slate-600 mt-1">{s.desc}</p>
                             <ul className="mt-2 space-y-1">
                               {s.bullets.map((b, i) => (
-                                <li
-                                  key={i}
-                                  className="flex items-center gap-2 text-[12px] text-slate-700"
-                                >
+                                <li key={i} className="flex items-center gap-2 text-[12px] text-slate-700">
                                   {b.icon}
                                   {b.text}
                                 </li>
@@ -229,84 +221,119 @@ const Navbar = () => {
                       setTechOpen((v) => !v);
                       setSolOpen(false);
                     }}
-                    className="capitalize flex items-center gap-1 text-sm font-medium text-neutral-100 transition hover:text-white"
+                    className="capitalize flex items-center gap-1 text-sm font-medium text-[#f6f3ee]/95 hover:text-white transition"
                   >
                     {item.label}
-                    <ChevronDown
-                      size={14}
-                      className={`transition-transform ${techOpen ? "rotate-180" : ""}`}
-                    />
+                    <ChevronDown size={14} className={`transition-transform ${techOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   {techOpen && (
                     <div
                       ref={techMenuRef}
                       className="absolute left-1/2 -translate-x-1/2 mt-3
-                                 w-[760px] max-w-[calc(100vw-2rem)]
+                                 w-[1000px] max-w-[calc(100vw-2rem)]
                                  rounded-xl border border-slate-200 bg-white shadow-2xl ring-1 ring-black/5
-                                 p-6 z-50"
+                                 p-8 z-[120] overflow-visible max-h-[75vh]"
                     >
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        <TechCard
-                          icon={<Server className="h-6 w-6 text-indigo-600" />}
-                          title="MEAN Stack"
-                          desc="MongoDB, Express, Angular, Node.js for scalable full-stack apps."
-                        />
-                        <TechCard
-                          icon={<Layers className="h-6 w-6 text-pink-600" />}
-                          title="MERN Stack"
-                          desc="MongoDB, Express, React, Node.js for modern web solutions."
-                        />
-                        <TechCard
-                          icon={<Cloud className="h-6 w-6 text-blue-600" />}
-                          title="Cloud"
-                          desc="AWS, Azure, GCP with secure, scalable architecture."
-                        />
-                        <TechCard
-                          icon={<Code2 className="h-6 w-6 text-green-600" />}
-                          title="Microsoft"
-                          desc=".NET, Azure & Power Platform for enterprises."
-                        />
-                        <TechCard
-                          icon={<Layout className="h-6 w-6 text-amber-600" />}
-                          title="UI Frameworks"
-                          desc="React, Vue, Angular, Next.js for sleek interfaces."
-                        />
-                        <TechCard
-                          icon={<Database className="h-6 w-6 text-purple-600" />}
-                          title="Database"
-                          desc="Secure, scalable data solutions for your apps."
-                        />
-                        <TechCard
-                          icon={<Code2 className="h-6 w-6 text-red-600" />}
-                          title="Python & Django"
-                          desc="Backend services and APIs with Django, Flask & FastAPI."
-                        />
-                        <TechCard
-                          icon={<Code2 className="h-6 w-6 text-orange-600" />}
-                          title="Java & Spring Boot"
-                          desc="Enterprise-grade backend systems and APIs."
-                        />
-                        <TechCard
-                          icon={<Code2 className="h-6 w-6 text-yellow-600" />}
-                          title="PHP & Laravel"
-                          desc="Modern, scalable web apps with Laravel framework."
-                        />
-                        <TechCard
-                          icon={<Layout className="h-6 w-6 text-blue-500" />}
-                          title="Mobile Apps"
-                          desc="Android (Kotlin/Java) & iOS (Swift) development."
-                        />
-                        <TechCard
-                          icon={<Cloud className="h-6 w-6 text-cyan-600" />}
-                          title="DevOps Tools"
-                          desc="Docker, Kubernetes, Jenkins, CI/CD pipelines."
-                        />
-                        <TechCard
-                          icon={<Layers className="h-6 w-6 text-purple-600" />}
-                          title="AI & ML"
-                          desc="Machine learning with TensorFlow, PyTorch & Scikit-learn."
-                        />
+                      {/* if viewport is short, allow scroll inside the panel */}
+                      <div className="max-h-[65vh] overflow-auto pr-1">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                          <NavTechLink to="/technologies#mean" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Server className="h-6 w-6 text-indigo-600" />}
+                              title="MEAN Stack"
+                              desc="MongoDB, Express, Angular, Node.js for scalable full-stack apps."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#mern" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Layers className="h-6 w-6 text-pink-600" />}
+                              title="MERN Stack"
+                              desc="MongoDB, Express, React, Node.js for modern web solutions."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#cloud" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Cloud className="h-6 w-6 text-blue-600" />}
+                              title="Cloud"
+                              desc="AWS, Azure, GCP with secure, scalable architecture."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#microsoft" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Code2 className="h-6 w-6 text-green-600" />}
+                              title="Microsoft"
+                              desc=".NET, Azure & Power Platform for enterprises."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#ui-frameworks" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Layout className="h-6 w-6 text-amber-600" />}
+                              title="UI Frameworks"
+                              desc="React, Vue, Angular, Next.js for sleek interfaces."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#database" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Database className="h-6 w-6 text-purple-600" />}
+                              title="Database"
+                              desc="Secure, scalable data solutions for your apps."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#python-django" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Code2 className="h-6 w-6 text-red-600" />}
+                              title="Python & Django"
+                              desc="Backends/APIs with Django, Flask & FastAPI."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#java-spring" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Code2 className="h-6 w-6 text-orange-600" />}
+                              title="Java & Spring Boot"
+                              desc="Enterprise-grade backend systems and APIs."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#php-laravel" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Code2 className="h-6 w-6 text-yellow-600" />}
+                              title="PHP & Laravel"
+                              desc="Modern, scalable web apps with Laravel."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#mobile-apps" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Layout className="h-6 w-6 text-blue-500" />}
+                              title="Mobile Apps"
+                              desc="Android (Kotlin/Java) & iOS (Swift)."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#devops" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Cloud className="h-6 w-6 text-cyan-600" />}
+                              title="DevOps Tools"
+                              desc="Docker, Kubernetes, Jenkins, CI/CD pipelines."
+                            />
+                          </NavTechLink>
+
+                          <NavTechLink to="/technologies#ai-ml" onDone={() => setTechOpen(false)}>
+                            <TechCard
+                              icon={<Layers className="h-6 w-6 text-purple-600" />}
+                              title="AI & ML"
+                              desc="TensorFlow, PyTorch & Scikit-learn."
+                            />
+                          </NavTechLink>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -318,11 +345,11 @@ const Navbar = () => {
           })}
         </ul>
 
-        {/* Right CTA (all devices) */}
+        {/* Right CTA */}
         <div className="block">
           <Link
             to="/contact"
-            className="inline-flex items-center border border-neutral-300/30 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-semibold text-neutral-100 hover:bg-white hover:text-neutral-900 transition"
+            className="inline-flex items-center border border-[#f6f3ee]/30 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-semibold text-[#f6f3ee] hover:bg-[#f6f3ee] hover:text-[#241c15] transition"
           >
             Get Started
           </Link>
@@ -330,18 +357,25 @@ const Navbar = () => {
       </div>
     </nav>
   );
-};
+}
+
+/* Small helpers */
+function NavTechLink({ to, onDone, children }) {
+  return (
+    <Link to={to} onClick={onDone} className="flex flex-col items-start rounded-lg p-0 text-left">
+      {children}
+    </Link>
+  );
+}
 
 function TechCard({ icon, title, desc }) {
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex flex-col items-start rounded-lg p-4 hover:bg-slate-50 transition text-left w-full">
       <div className="w-10 h-10 flex items-center justify-center rounded-md bg-slate-100 mb-2">
         {icon}
       </div>
       <h4 className="text-sm font-semibold text-slate-900">{title}</h4>
-      <p className="text-[12px] text-slate-600 mt-1 text-left">{desc}</p>
+      <p className="text-[12px] text-slate-600 mt-1">{desc}</p>
     </div>
   );
 }
-
-export default Navbar;
