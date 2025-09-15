@@ -2,7 +2,7 @@ import React from "react";
 
 export default function About() {
   return (
-    <section id="about" className="pt-8 pb-15 bg-gray-50">
+    <section id="about" className="p-12 bg-gray-50">
       <div className="mx-auto md:px-0 lg:px-0 grid md:grid-cols-2 gap-10 items-center">
         {/* LEFT: Full Image */}
         <div className="flex justify-center items-center h-full w-full">
