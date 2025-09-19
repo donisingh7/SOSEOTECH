@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { HashRouter, Routes, Route, useLocation, Outlet } from "react-router-dom";
 
@@ -10,31 +11,25 @@ import Footer from "./components/Footer";
 import AboutPage from "./pages/AboutPage";
 import WhyChooseUs from "./components/WhyChooseUs";
 import CareersPage from "./pages/CareersPage";
-import ContactPage from "./pages/ContactPage"; // add
+import ContactPage from "./pages/ContactPage";
 import Testimonials from "./components/Testimonials";
 import Technologies from "./pages/Technologies.jsx";
+import Teams from "./pages/Teams.jsx";
 
-
-
-// inside <Route element={<ShellLayout />}> …
-<Route path="/contact" element={<ContactPage />} />
-
-
-
-
-/* ---------- Always-on layout (Navbar everywhere) ---------- */
+/* ---------- Always-on app shell: Navbar + page content + Footer ---------- */
 function ShellLayout() {
   return (
-    <>
-      <Navbar /> {/* Same navbar on every page */}
-      <div className="pt-20">
-        <Outlet />
-      </div>
-    </>
+    <div className="min-h-screen flex flex-col bg-white">
+      <Navbar />            {/* same navbar everywhere */}
+      <main className="flex-1 pt-20">
+        <Outlet />          {/* each page renders here */}
+      </main>
+      <Footer />           {/* footer on EVERY page */}
+    </div>
   );
 }
 
-/* ---------- Home layout (no Navbar here now) ---------- */
+/* ---------- Home (landing) with section scrolling ---------- */
 function HomeLayout() {
   const sections = [
     { id: "home", label: "HOME" },
@@ -49,7 +44,7 @@ function HomeLayout() {
   const refs = useRef(Object.fromEntries(sections.map((s) => [s.id, null])));
   const location = useLocation();
 
-  // Auto-scroll on path like /#/services
+  // Auto-scroll on /#/services etc.
   useEffect(() => {
     const path = location.pathname?.slice(1);
     if (path) {
@@ -79,7 +74,7 @@ function HomeLayout() {
     return () => document.removeEventListener("click", onDocClick);
   }, []);
 
-  // Active section tracking
+  // Track the active section
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
@@ -97,18 +92,18 @@ function HomeLayout() {
 
   return (
     <div className="font-sans">
-      {/* Navbar removed here; ShellLayout handles it globally */}
+      {/* Navbar is in ShellLayout */}
       <section id="home" ref={(el) => (refs.current.home = el)} className="section bg-brand-gray">
         <Hero scrollTo={scrollTo} />
       </section>
 
-        <Services />
-                <About />
-  <WhyChooseUs />
-        <Testimonials />                      
+      <Services />
+      <About />
+      <WhyChooseUs />
+      <Testimonials />
 
-        {/* <Team /> */}
-      <Footer />
+      {/* <Team /> */}
+      {/* Footer removed from here so it’s not duplicated; now in ShellLayout */}
     </div>
   );
 }
@@ -118,16 +113,14 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route element={<ShellLayout />}>
-          {/* Home (also handles /about, /services, etc. for section-scroll) */}
+          {/* Home (also handles section-scrolling) */}
           <Route path="/*" element={<HomeLayout />} />
-          {/* True separate pages */}
+          {/* Separate pages */}
           <Route path="/about" element={<AboutPage />} />
           <Route path="/careers" element={<CareersPage />} />
           <Route path="/contact" element={<ContactPage />} />
-            <Route path="/technologies" element={<Technologies />} />
-
-
-
+          <Route path="/technologies" element={<Technologies />} />
+          <Route path="/teams" element={<Teams />} />
         </Route>
       </Routes>
     </HashRouter>

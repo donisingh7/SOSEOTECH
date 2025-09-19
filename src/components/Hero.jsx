@@ -18,7 +18,6 @@ export default function Hero() {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              {/* Must match your Route path (Navbar uses "/contact") */}
               <Link
                 to="/contact"
                 className="inline-flex items-center justify-center rounded-xl bg-yellow-500 px-6 py-3 font-semibold text-black hover:bg-yellow-400 transition"
