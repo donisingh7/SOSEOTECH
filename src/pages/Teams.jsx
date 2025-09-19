@@ -11,7 +11,7 @@ export default function Teams() {
   return (
     <main className="bg-white min-h-screen">
   {/* enough top spacing so hero doesn’t overlap navbar */}
-  <div className="pt-24" />
+  <div className="pt-16" />
 
   {/* ===== Hero ===== */}
   <section className="mx-auto max-w-7xl px-6">

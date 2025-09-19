@@ -427,10 +427,8 @@ export default function Technologies() {
           <h1 className="text-3xl md:text-4xl font-extrabold text-neutral-900">Technologies</h1>
         </div>
 
-        <p className="mt-2 max-w-4xl text-[16px] md:text-[17px] leading-8 text-neutral-700 text-justify">
-          Our expertise spans mainstream, complex and niche technologies using which we take pride in hosting
-          cutting-edge capabilities. The list of technologies encompass a wide array of tools and methods that
-          developers use to design, build, test, and deploy software applications.
+        <p className="mt-2 text-[16px] md:text-[17px] leading-8 text-neutral-700 text-justify">
+          Our expertise spans mainstream, complex, and niche technologies, through which we take pride in delivering cutting-edge capabilities to our clients. Over the years, we have built deep proficiency across modern frameworks, platforms, and tools that empower businesses to innovate and stay ahead in a competitive digital world. The list of technologies we work with encompasses a wide array of methodologies and solutions that developers rely on to design, build, test, and deploy robust applications. From web and mobile frameworks to enterprise-grade platforms, from cloud and DevOps practices to advanced data and AI/ML solutions, our technology stack ensures scalability, security, and performance. By combining proven approaches with the latest advancements, we are able to create solutions that are not only future-ready but also tailored to the unique needs of each client.
         </p>
       </div>
 
@@ -469,7 +467,7 @@ export default function Technologies() {
                     <img
                       src={hero}
                       alt={t.title}
-                      className="w-full h-72 md:h-100 object-cover"  // 🔥 Fixed height for all
+                      className="w-full h-75 md:h-90 object-cover"  // 🔥 Fixed height for all
                       onError={(e) => (e.currentTarget.style.display = "none")}
                     />
                   </div>

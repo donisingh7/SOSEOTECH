@@ -54,7 +54,7 @@ const SERVICES = [
   },
   {
     icon: <Megaphone className="h-7 w-7 text-pink-600" />,
-    title: "Marketing Services",
+    title: "Social Media Marketing",
     desc: "Data-driven strategies to grow your brand and improve ROI.",
     bullets: [
       { text: "SEO", icon: <Search className="h-4 w-4 text-pink-600" /> },

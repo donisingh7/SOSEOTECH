@@ -120,7 +120,7 @@ export default function Navbar() {
     {
       id: "marketing-services",
       icon: <Megaphone className="h-5 w-5 text-pink-600" />,
-      title: "Marketing Services",
+      title: "Social Media Marketing",
       desc: "Data-driven strategies to grow your brand and improve ROI.",
       bullets: [
         { text: "SEO", icon: <Search className="h-3.5 w-3.5 text-pink-600" /> },
