@@ -14,7 +14,6 @@ import CareersPage from "./pages/CareersPage";
 import ContactPage from "./pages/ContactPage";
 import Testimonials from "./components/Testimonials";
 import Technologies from "./pages/Technologies.jsx";
-import Teams from "./pages/Teams.jsx";
 
 /* ---------- Always-on app shell: Navbar + page content + Footer ---------- */
 function ShellLayout() {
@@ -120,7 +119,6 @@ export default function App() {
           <Route path="/careers" element={<CareersPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/technologies" element={<Technologies />} />
-          <Route path="/teams" element={<Teams />} />
         </Route>
       </Routes>
     </HashRouter>

@@ -78,7 +78,6 @@ export default function Navbar() {
     { label: "Solutions & Services", type: "mega" },
     { label: "Technologies", type: "dropdown" },
     { label: "Careers", type: "route", to: "/careers" },
-    { label: "Teams", type: "route", to: "/Teams" },
     { label: "Contact Us", type: "route", to: "/contact" },
 
   ];
