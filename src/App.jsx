@@ -14,7 +14,6 @@ import CareersPage from "./pages/CareersPage";
 import ContactPage from "./pages/ContactPage";
 import Testimonials from "./components/Testimonials";
 import Technologies from "./pages/Technologies.jsx";
-import ResourcePage from "./pages/ResourcePage.jsx";
 import Blogs from "./pages/Blogs.jsx";
 import CaseStudies from "./pages/CaseStudies.jsx";
 import NewsLetter from "./pages/NewsLetter.jsx";
@@ -89,7 +88,6 @@ export default function App() {
           <Route path="/resources/newsletters/:slug" element={<NewsletterDetail />} />
           <Route path="/resources/case-studies" element={<CaseStudies />} />
           <Route path="/resources/case-studies/:slug" element={<CaseStudyDetail />} />
-          <Route path="/resources" element={<ResourcePage/>} />
           <Route path="/resources/blogs/:slug" element={<BlogDetail/>} />
 
           <Route path="services/software-development" element={<SoftwareDevelopment />} />
