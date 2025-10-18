@@ -1,2 +1,40 @@
 @import "tailwindcss";
 
+/* @layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities); */
+
+
+
+html, body, #root { height: 100%; }
+body { margin: 0 !important; padding: 0 !important; }
+* { box-sizing: border-box; }
+.animate-gradient {
+  background-size: 300% 300%;
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 30s linear infinite;
+}
+/* theme.css — Dark-only (Strategy: Charcoal Slate + Emerald) */
+:root {
+  --bg: #0D1216;              /* page background */
+  --surface: #141A20;         /* cards */
+  --muted: #1C242C;           /* icon puck / muted surfaces */
+  --border: #2B3640;          /* borders / dividers */
+  --text: #E6EEF4;            /* primary text */
+  --text-muted: #A8B5C2;      /* secondary text */
+  --accent: #28D17C;          /* primary accent (emerald) */
+  --accent-contrast: #0A1210; /* text on accent */
+  --accent-2: #6CA8FF;        /* secondary accent (cool blue) */
+  --accent-2-contrast: #0A0F18;
+
+  --success: #36D399;
+  --warning: #F2C64D;
+  --danger:  #FF7272;
+}

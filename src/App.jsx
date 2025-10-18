@@ -1,12 +1,12 @@
-// src/App.jsx
-import React, { useEffect, useRef, useState } from "react";
-import { HashRouter, Routes, Route, useLocation, Outlet } from "react-router-dom";
 
+
+import React from "react";
+import { BrowserRouter, Routes, Route, Outlet, useLocation } from "react-router-dom";
+
+import ScrollToTop from "./components/ScrollToTop";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import About from "./components/About";
 import Services from "./components/Services";
-// import Team from "./components/Team";
 import Footer from "./components/Footer";
 import AboutPage from "./pages/AboutPage";
 import WhyChooseUs from "./components/WhyChooseUs";
@@ -14,115 +14,97 @@ import CareersPage from "./pages/CareersPage";
 import ContactPage from "./pages/ContactPage";
 import Testimonials from "./components/Testimonials";
 import Technologies from "./pages/Technologies.jsx";
-import Teams from "./pages/Teams.jsx";
+import ResourcePage from "./pages/ResourcePage.jsx";
+import Blogs from "./pages/Blogs.jsx";
+import CaseStudies from "./pages/CaseStudies.jsx";
+import NewsLetter from "./pages/NewsLetter.jsx";
+import BlogDetail from "./pages/BlogDetail.jsx";
+import CaseStudyDetail from "./pages/CaseStudyDetail.jsx";
+import NewsletterDetail from "./pages/NewsLetterDetail.jsx";
+
+import SoftwareDevelopment from "./pages/servicepages/SoftwareDevelopment.jsx";
+import WebsiteDevelopment from "./pages/servicepages/WebDev.jsx";
+import CloudSolution from "./pages/servicepages/CloudSol.jsx";
+import SocialMediaMarketing from "./pages/servicepages/SocialMarketing.jsx";
+import FinanceConsulting from "./pages/servicepages/Finance.jsx";
+import BusinessSolutions from "./pages/servicepages/Business.jsx";
+import AIChatBot from "./pages/servicepages/Chatbot.jsx";
+
+
 
 /* ---------- Always-on app shell: Navbar + page content + Footer ---------- */
 function ShellLayout() {
+  const { pathname } = useLocation();
+  // Solid everywhere except home (“/” in HashRouter after the #)
+  const forceSolid = pathname !== "/";
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <Navbar />            {/* same navbar everywhere */}
-      <main className="flex-1 pt-20">
-        <Outlet />          {/* each page renders here */}
+      <Navbar forceSolid={forceSolid} />
+      {/* Match navbar height: 72px when solid, 80px when transparent */}
+      <main className={forceSolid ? "flex-1 pt-[72px]" : "flex-1 pt-20"}>
+        <Outlet />
       </main>
-      <Footer />           {/* footer on EVERY page */}
+      <Footer />
     </div>
   );
 }
 
 /* ---------- Home (landing) with section scrolling ---------- */
 function HomeLayout() {
-  const sections = [
-    { id: "home", label: "HOME" },
-    { id: "about", label: "ABOUT" },
-    { id: "services", label: "SERVICE" },
-    { id: "careers", label: "CAREERS" },
-    { id: "team", label: "TEAM" },
-    { id: "contact", label: "CONTACT US" },
-  ];
-
-  const [active, setActive] = useState("home");
-  const refs = useRef(Object.fromEntries(sections.map((s) => [s.id, null])));
-  const location = useLocation();
-
-  // Auto-scroll on /#/services etc.
-  useEffect(() => {
-    const path = location.pathname?.slice(1);
-    if (path) {
-      setTimeout(() => {
-        document.getElementById(path)?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 0);
-    }
-  }, [location.pathname]);
-
-  // Intercept anchor clicks to smooth-scroll sections
-  useEffect(() => {
-    const sectionIds = new Set(["home", "about", "services", "careers", "team", "contact-us", "contact"]);
-    const onDocClick = (e) => {
-      const a = e.target.closest('a[href]');
-      if (!a) return;
-      const url = new URL(a.href, window.location.href);
-      const hash = url.hash;
-      if (hash && sectionIds.has(hash.slice(1))) {
-        e.preventDefault();
-        const id = hash.slice(1);
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-        history.replaceState(null, "", `#/${id}`);
-      }
-    };
-    document.addEventListener("click", onDocClick);
-    return () => document.removeEventListener("click", onDocClick);
-  }, []);
-
-  // Track the active section
-  useEffect(() => {
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
-      { rootMargin: "-50% 0px -45% 0px", threshold: 0.01 }
-    );
-    sections.forEach(({ id }) => {
-      const el = document.getElementById(id);
-      if (el) io.observe(el);
-    });
-    return () => io.disconnect();
-  }, []);
-
+  // Keep your existing home sections
   const scrollTo = (id) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
     <div className="font-sans">
-      {/* Navbar is in ShellLayout */}
-      <section id="home" ref={(el) => (refs.current.home = el)} className="section bg-brand-gray">
+      <section id="home" className="section bg-brand-gray">
         <Hero scrollTo={scrollTo} />
       </section>
-
+      {/* <About /> */}
       <Services />
-      <About />
       <WhyChooseUs />
       <Testimonials />
-
-      {/* <Team /> */}
-      {/* Footer removed from here so it’s not duplicated; now in ShellLayout */}
+      {/* Footer is already in ShellLayout */}
     </div>
   );
 }
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter >
+    <ScrollToTop />
       <Routes>
         <Route element={<ShellLayout />}>
-          {/* Home (also handles section-scrolling) */}
-          <Route path="/*" element={<HomeLayout />} />
-          {/* Separate pages */}
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/careers" element={<CareersPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/technologies" element={<Technologies />} />
-          <Route path="/teams" element={<Teams />} />
+          {/* Home as the index route (so pathname === "/") */}
+          <Route index element={<HomeLayout />} />
+
+          {/* Other pages (solid navbar) */}
+          <Route path="about" element={<AboutPage />} />
+          <Route path="careers" element={<CareersPage />} />
+          <Route path="contact" element={<ContactPage />} />
+          <Route path="technologies" element={<Technologies />} />
+          <Route path="blogs" element={<Blogs />} />
+          <Route path="/resources/newsletter" element={<NewsLetter/>} />
+          <Route path="/resources/newsletters/:slug" element={<NewsletterDetail />} />
+          <Route path="/resources/case-studies" element={<CaseStudies />} />
+          <Route path="/resources/case-studies/:slug" element={<CaseStudyDetail />} />
+          <Route path="/resources" element={<ResourcePage/>} />
+          <Route path="/resources/blogs/:slug" element={<BlogDetail/>} />
+
+          <Route path="services/software-development" element={<SoftwareDevelopment />} />
+          <Route path="services/web-development" element={<WebsiteDevelopment />} />
+          <Route path="services/cloud-solutions" element={<CloudSolution />} />
+          <Route path="services/social-media-marketing" element={<SocialMediaMarketing />} />
+          <Route path="services/finance-accounting" element={<FinanceConsulting />} />
+          <Route path="services/business-solutions" element={<BusinessSolutions />} />
+          <Route path="services/ai-chatbot" element={<AIChatBot />} />
+
+
+          {/* (Optional) catch-all for unknown routes — send to home or a 404 page */}
+          {/* <Route path="*" element={<HomeLayout />} /> */}
         </Route>
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }

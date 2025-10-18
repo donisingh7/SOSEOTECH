@@ -101,15 +101,6 @@ export default function Footer() {
             <li>
               <button
                 type="button"
-                onClick={() => goSection("home")}
-                className="hover:text-white"
-              >
-                Home
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
                 onClick={() => goRoute("/about")}
                 className="hover:text-white"
               >
@@ -119,10 +110,10 @@ export default function Footer() {
             <li>
               <button
                 type="button"
-                onClick={() => goSection("services")}
+                onClick={() => goRoute("technologies")}
                 className="hover:text-white"
               >
-                Services
+                Technologies
               </button>
             </li>
             <li>
@@ -137,19 +128,37 @@ export default function Footer() {
             <li>
               <button
                 type="button"
-                onClick={() => goSection("team")}
+                onClick={() => goRoute("/contact")}
                 className="hover:text-white"
               >
-                Team
+                Contact
               </button>
             </li>
             <li>
               <button
                 type="button"
-                onClick={() => goRoute("/contact")}
+                onClick={() => goRoute("/blogs")}
                 className="hover:text-white"
               >
-                Contact
+                Blogs
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => goRoute("/resources/newsletter")}
+                className="hover:text-white"
+              >
+                Newsletter
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => goRoute("/resources/case-studies")}
+                className="hover:text-white"
+              >
+                Case Studies
               </button>
             </li>
           </ul>
@@ -159,10 +168,69 @@ export default function Footer() {
         <div>
           <h4 className="text-lg font-semibold">Our Services</h4>
           <ul className="mt-3 space-y-2 text-gray-300 text-sm">
-            <li>Software Development</li>
-            <li>Web Development</li>
-            <li>Cloud Solutions</li>
-            <li>Marketing &amp; Business</li>
+            <li>
+              <button
+                type="button"
+                onClick={() => goRoute("services/software-development")}
+                className="hover:text-white"
+              >
+                Software Development
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => goRoute("services/web-development")}
+                className="hover:text-white"
+              >
+                Web Development
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => goRoute("services/cloud-solutions")}
+                className="hover:text-white"
+              >
+                Cloud Solutions
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => goRoute("services/social-media-marketing")}
+                className="hover:text-white"
+              >
+                Social Media Marketing
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => goRoute("services/finance-accounting")}
+                className="hover:text-white"
+              >
+                Finance &amp; Accounting
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => goRoute("services/business-solutions")}
+                className="hover:text-white"
+              >
+                Business Solutions
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => goRoute("services/ai-chatbot")}
+                className="hover:text-white"
+              >
+                AI ChatBot
+              </button>
+            </li>
           </ul>
         </div>
 

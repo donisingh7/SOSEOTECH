@@ -1,0 +1,271 @@
+/* ===========================
+   ServicesPage.css  (SOSEO)
+   Consistent look for all service pages
+   =========================== */
+
+/* ---- Theme tokens ---- */
+:root{
+  --bg:#241c15;           /* page bg (coffee brown) */
+  --ink:#f6f3ee;          /* text on dark */
+  --ink-2:#e9e4dd;        /* secondary text */
+  --muted:#c9c1b7;        /* subtle */
+  --card:#fff;            /* light card */
+  --card-ink:#0f172a;     /* slate-900 */
+  --brand:#f4d06f;        /* accent (warm yellow) */
+  --brand-ink:#3a2f26;    /* dark for brand contrast */
+  --line:#efece7;         /* borders on light */
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+/* ---- Page scaffold ---- */
+.svc-page{
+  background:var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+}
+.svc-container{
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 1rem;
+}
+
+/* ---- Hero ---- */
+.svc-hero{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:56vh;
+  border-bottom:1px solid rgba(246,243,238,.08);
+  overflow:hidden;
+  background:
+    radial-gradient(1200px 400px at 50% -10%, rgba(244,208,111,.10), transparent 70%),
+    linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.25));
+}
+.svc-hero__media{
+  position:absolute; inset:0;
+  background-position:center; background-size:cover;
+  filter:brightness(.6);
+}
+.svc-hero__content{
+  position:relative; z-index:2; text-align:center;
+  padding:3rem 1rem;
+}
+.svc-eyebrow{
+  display:inline-block;
+  letter-spacing:.08em; text-transform:uppercase;
+  font-weight:700; font-size:.72rem;
+  color:var(--brand);
+  background:rgba(244,208,111,.12);
+  border:1px solid rgba(244,208,111,.35);
+  padding:.35rem .6rem; border-radius:999px;
+}
+.svc-title{
+  margin:.9rem auto 0;
+  font-size:clamp(1.8rem, 3.2vw, 3rem);
+  line-height:1.1; font-weight:800;
+  max-width:22ch;
+}
+.svc-subtitle{
+  margin:.8rem auto 0; color:var(--ink-2);
+  font-size:clamp(.95rem,1.3vw,1.05rem); line-height:1.6;
+  max-width:60ch;
+}
+
+/* ---- Breadcrumb ---- */
+.svc-breadcrumb{
+  font-size:.85rem; color:var(--muted);
+  padding:1rem 0; margin-top:-.5rem;
+}
+.svc-breadcrumb a{ color:var(--ink-2); text-decoration:none; }
+.svc-breadcrumb a:hover{ color:var(--ink); }
+
+/* ---- Section blocks ---- */
+.svc-section{ padding:2.8rem 0; }
+.svc-section + .svc-section{ border-top:1px solid rgba(246,243,238,.08); }
+
+/* ---- Two-column layout (content + sticky sidebar) ---- */
+.svc-grid{
+  display:grid; gap:2rem;
+  grid-template-columns:1fr;
+}
+@media (min-width:1024px){
+  .svc-grid{ grid-template-columns:minmax(0,1fr) 320px; }
+}
+.svc-prose{
+  color:var(--ink-2);
+  font-size:1rem; line-height:1.8;
+}
+.svc-prose h2{
+  color:var(--ink); font-size:1.6rem; line-height:1.25; margin:0 0 .6rem;
+}
+.svc-prose p{ margin:.8rem 0; }
+.svc-prose strong{ color:var(--ink); }
+
+/* ---- Cards / bullets ---- */
+.svc-cards{
+  display:grid; gap:1rem;
+  grid-template-columns:1fr;
+}
+@media (min-width:700px){
+  .svc-cards{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+}
+@media (min-width:1024px){
+  .svc-cards{ grid-template-columns:repeat(3, minmax(0,1fr)); }
+}
+.svc-card{
+  background:var(--card); color:var(--card-ink);
+  border:1px solid var(--line);
+  border-radius:14px; padding:1rem;
+  box-shadow:var(--shadow);
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.svc-card:hover{ transform:translateY(-2px); box-shadow:0 12px 36px rgba(0,0,0,.12); }
+
+.svc-card__icon{
+  width:40px; height:40px; border-radius:10px;
+  background:#f8fafc; display:flex; align-items:center; justify-content:center;
+  margin-bottom:.7rem;
+  border:1px solid #eef2f7;
+}
+.svc-card__title{ font-weight:700; margin:.1rem 0 .25rem; }
+.svc-card__desc{ font-size:.92rem; color:#475569; }
+
+.svc-bullets{
+  margin-top:.6rem; display:grid; gap:.45rem;
+}
+.svc-bullet{
+  display:flex; gap:.55rem; align-items:flex-start;
+  font-size:.92rem; color:#334155;
+}
+.svc-bullet svg{ flex:0 0 16px; margin-top:.2rem; color:#0ea5e9; }
+
+/* ---- Stats strip ---- */
+.svc-stats{
+  display:grid; gap:.8rem; grid-template-columns:repeat(2,1fr);
+  margin:1.2rem 0 0;
+}
+@media (min-width:700px){
+  .svc-stats{ grid-template-columns:repeat(4,1fr); }
+}
+.svc-stat{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(246,243,238,.12);
+  border-radius:12px; padding:1rem; text-align:center;
+}
+.svc-stat__num{
+  color:var(--brand); font-weight:800; font-size:1.4rem;
+}
+.svc-stat__label{ color:var(--ink-2); font-size:.85rem; }
+
+/* ---- Sticky sidebar ---- */
+.svc-aside{
+  position:sticky; top:96px;
+  display:grid; gap:1rem; height:fit-content;
+}
+.svc-aside__card{
+  background:var(--card); color:var(--card-ink);
+  border:1px solid var(--line); border-radius:14px; padding:1rem;
+  box-shadow:var(--shadow);
+}
+.svc-cta{
+  display:flex; gap:.6rem; flex-wrap:wrap; align-items:center;
+}
+.svc-btn{
+  appearance:none; border:0; cursor:pointer;
+  padding:.7rem 1rem; border-radius:999px;
+  font-weight:800; letter-spacing:.01em;
+  transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.svc-btn--brand{
+  background:var(--brand); color:var(--brand-ink);
+  box-shadow:0 6px 18px rgba(244,208,111,.25);
+}
+.svc-btn--brand:hover{ transform:translateY(-1px); box-shadow:0 10px 24px rgba(244,208,111,.35); }
+.svc-btn--ghost{
+  background:transparent; color:var(--card-ink);
+  border:1px solid #e5e7eb;
+}
+.svc-btn--ghost:hover{ background:#f8fafc; }
+
+/* ---- Pricing / plan table ---- */
+.svc-plans{
+  display:grid; gap:1rem; margin-top:.6rem;
+}
+@media (min-width:700px){
+  .svc-plans{ grid-template-columns:repeat(3, minmax(0,1fr)); }
+}
+.svc-plan{
+  background:var(--card); color:var(--card-ink);
+  border:1px solid var(--line); border-radius:14px; padding:1rem;
+}
+.svc-plan__head{
+  display:flex; align-items:center; justify-content:space-between; gap:.5rem;
+  margin-bottom:.4rem;
+}
+.svc-price{ font-weight:900; font-size:1.35rem; color:#111827; }
+.svc-chip{
+  font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+  background:#ecfeff; color:#0369a1; border:1px solid #bae6fd;
+  padding:.25rem .5rem; border-radius:999px;
+}
+.svc-plan ul{ margin-top:.5rem; display:grid; gap:.4rem; color:#334155; }
+
+/* ---- FAQ accordion ---- */
+.svc-faq{
+  display:grid; gap:.7rem; margin-top:.6rem;
+}
+.svc-qa{
+  background:var(--card); color:var(--card-ink);
+  border:1px solid var(--line); border-radius:12px; overflow:hidden;
+}
+.svc-qa__q{
+  width:100%; text-align:left; background:#fff; color:#0f172a;
+  padding:1rem 1rem; border:0; display:flex; justify-content:space-between; align-items:center;
+  cursor:pointer;
+}
+.svc-qa__q:hover{ background:#f8fafc; }
+.svc-qa__a{
+  max-height:0; overflow:hidden; transition:max-height .22s ease;
+  background:#fcfcfd; color:#334155; border-top:1px solid #eef2f7; padding:0 1rem;
+}
+.svc-qa.open .svc-qa__a{ padding:1rem; max-height:260px; }
+
+/* ---- CTA band ---- */
+.svc-band{
+  margin:2.2rem 0 0; border-radius:16px; overflow:hidden;
+  background:
+    radial-gradient(800px 280px at 80% -60%, rgba(244,208,111,.15), transparent 70%),
+    #15100b;
+  border:1px solid rgba(246,243,238,.1);
+  padding:1.5rem;
+}
+.svc-band__row{
+  display:grid; gap:1rem; align-items:center;
+  grid-template-columns:1fr;
+}
+@media (min-width:900px){
+  .svc-band__row{ grid-template-columns:1.3fr .7fr; }
+}
+.svc-band h3{ margin:0 0 .25rem; font-size:1.4rem; }
+.svc-band p{ margin:0; color:var(--ink-2); }
+
+/* ---- Utilities ---- */
+.svc-kicker{ color:var(--brand); font-weight:800; letter-spacing:.06em; text-transform:uppercase; font-size:.75rem; }
+.svc-muted{ color:var(--ink-2); }
+.svc-divider{ height:1px; background:rgba(246,243,238,.1); margin:1.2rem 0; }
+.svc-list{ list-style:none; padding:0; margin:0; display:grid; gap:.45rem; }
+.svc-list li::before{ content:"• "; color:var(--brand); margin-right:.25rem; }
+
+/* ---- Animations (subtle) ---- */
+@media (prefers-reduced-motion:no-preference){
+  .svc-fade-in{ animation:svcFade .4s ease both; }
+  @keyframes svcFade{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+}
+
+/* ---- Light-on-light variant (optional) ----
+   Add .svc-light on blocks if you place them over white backgrounds */
+.svc-light{ background:var(--card); color:var(--card-ink); border:1px solid var(--line); }
+.svc-light .svc-prose{ color:#334155; }
+.svc-light .svc-prose h2{ color:#0f172a; }
