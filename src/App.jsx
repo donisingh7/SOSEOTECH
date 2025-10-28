@@ -42,6 +42,7 @@ function ShellLayout() {
       <Navbar forceSolid={forceSolid} />
       {/* Match navbar height: 72px when solid, 80px when transparent */}
       <main className={forceSolid ? "flex-1 pt-[72px]" : "flex-1 pt-20"}>
+        <div id="nav-sentinel" className="h-px w-px" />
         <Outlet />
       </main>
       <Footer />
