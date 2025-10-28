@@ -28,29 +28,45 @@ function useSmartScroll() {
 }
 
 /** Reusable wrapper: fade-in + slide-up on enter, smooth fade-out as you scroll past */
-function Reveal({ children, className = "", y = 24 }) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 80%", "end 20%"],
-  });
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.2]);
-  const translateY = useTransform(scrollYProgress, [0, 0.2], [y, 0]);
+// function Reveal({ children, className = "", y = 24 }) {
+//   const ref = useRef(null);
+//   const { scrollYProgress } = useScroll({
+//     target: ref,
+//     offset: ["start 80%", "end 20%"],
+//   });
+//   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0.2]);
+//   const translateY = useTransform(scrollYProgress, [0, 0.2], [y, 0]);
 
+//   return (
+//     <motion.div
+//       ref={ref}
+//       style={{ opacity, y: translateY }}
+//       className={className}
+//       initial={{ opacity: 0, y }}
+//       whileInView={{ opacity: 1, y: 0 }}
+//       viewport={{ once: true }}
+//       transition={{ duration: 0.6, ease: "easeOut" }}
+//     >
+//       {children}
+//     </motion.div>
+//   );
+// }
+
+// ⬇️ replace your current Reveal with this
+function Reveal({ children, className = "", y = 24 }) {
   return (
     <motion.div
-      ref={ref}
-      style={{ opacity, y: translateY }}
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
     >
       {children}
     </motion.div>
   );
 }
+
 
 /* small external link icon */
 function ExternalLinkIcon({ className = "inline-block w-4 h-4 ml-2" }) {
